@@ -12,3 +12,7 @@ def parse_template(text):
     return stripped, parts
 
 
+def merge(madlib, user_inputs):
+    return madlib.format(*user_inputs)
+
+
