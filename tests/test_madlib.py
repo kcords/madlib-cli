@@ -8,7 +8,6 @@ def test_read_template_returns_stripped_string():
     assert actual == expected
 
 
-@pytest.mark.skip("pending")
 def test_parse_template():
     actual_stripped, actual_parts = parse_template(
         "It was a {Adjective} and {Adjective} {Noun}."
