@@ -8,6 +8,7 @@ def create_madlib():
     template = read_template(path)
     blank_madlib, user_inputs = gather_prompt_inputs(template)
     madlib = generate_madlib(blank_madlib, user_inputs)
+    save_to_file(madlib)
 
 
 def show_header():
@@ -76,6 +77,11 @@ def generate_madlib(blank_madlib, user_inputs):
 
 def merge(madlib, user_inputs):
     return madlib.format(*user_inputs)
+
+
+def save_to_file(text):
+    with open('./generated/madlib.txt', 'w') as file:
+        file.write(text)
 
 
 def show_divider(character="="):

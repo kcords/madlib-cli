@@ -2,7 +2,7 @@ import pytest
 import os
 from collections import namedtuple
 
-from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, gather_prompt_inputs, merge, generate_madlib
+from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, gather_prompt_inputs, merge, generate_madlib, save_to_file
 
 
 def emulate_terminal_size(monkeypatch, columns=20, lines=10):
@@ -108,3 +108,12 @@ def test_valid_generated_madlib(monkeypatch):
     mocked_inputs = ["dark", "stormy", "night"]
     actual = generate_madlib(blank_madlib, mocked_inputs)
     assert expected == actual
+
+
+def test_file_saved_successfully():
+    expected = "It was a dark and stormy night."
+    save_to_file(expected)
+    actual = ""
+    with open('./generated/madlib.txt', 'r') as file:
+        actual = file.read()
+    assert actual == expected
