@@ -2,7 +2,7 @@ import pytest
 import os
 from collections import namedtuple
 
-from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, merge
+from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, gather_prompt_inputs, merge
 
 
 def emulate_terminal_size(monkeypatch, columns=20, lines=10):
@@ -20,7 +20,6 @@ def test_displays_a_valid_header(monkeypatch, capsys):
     welcome_msg = "Welcome to madlibs!"
     show_header()
     assert text_in_captured_output(welcome_msg, capsys)
-
 
 
 def test_displays_a_valid_divider(monkeypatch, capsys):
@@ -41,6 +40,7 @@ def test_returns_path_from_template_title():
     expected = "./assets/dark_and_stormy_night_template.txt"
     actual = get_path_from_template_title(template_title)
     assert expected == actual
+
 
 def test_chooses_correct_template_from_selection(monkeypatch, capsys):
     user_input = "3"
@@ -76,6 +76,17 @@ def test_parse_template():
 
     assert actual_stripped == expected_stripped
     assert actual_parts == expected_parts
+
+
+def test_gather_user_inputs(monkeypatch):
+    template = "It was a {Adjective} and {Adjective} {Noun}."
+    user_inputs = ["dark", "stormy", "night"]
+    def mock_user_input(prompt):
+        return user_inputs.pop(0)
+    monkeypatch.setattr('builtins.input', mock_user_input)
+    expected_stripped = "It was a {} and {} {}."
+    actual_stripped, actual_user_inputs = gather_prompt_inputs(template)
+    assert actual_stripped == expected_stripped and all(a == b for a, b in zip(user_inputs, actual_user_inputs))
 
 
 def test_merge():

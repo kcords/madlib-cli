@@ -6,6 +6,7 @@ def create_madlib():
     show_header()
     path = choose_template()
     template = read_template(path)
+    blank_madlib, user_inputs = gather_prompt_inputs(template)
 
 
 def show_header():
@@ -48,6 +49,16 @@ def read_template(path):
         return file.read()
 
 
+def gather_prompt_inputs(template):
+    stripped, parts = parse_template(template)
+    user_inputs = []
+    for prompt in parts:
+        response = input(strings['prompt_prefix'].format(
+            prompt.lower().strip()))
+        user_inputs.append(response)
+    return (stripped, user_inputs)
+
+
 def parse_template(text):
     regex = r'\{(.*?)\}'
     parts = tuple(re.findall(regex, text))
@@ -75,7 +86,8 @@ strings = {
     "welcome": """Hey there! Welcome to madlibs!\n\nYou will be prompted to select a madlib template.\n\nYou will then be given a series of prompts. Fill in each to create your madlib.\n\nReady to have some fun? Lets get started...""",
     "make_selection": "\nPlease select a madlib: ",
     "selection_error": "The selection you provided is not valid, please try again.",
-    "selected_prefix": "\nOkay then, let's get started creating {}..."
+    "selected_prefix": "\nOkay then, let's get started creating {}...",
+    "prompt_prefix": "Please provide a(n) {}: ",
 }
 
 if __name__ == "__main__":
