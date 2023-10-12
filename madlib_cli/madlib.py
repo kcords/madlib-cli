@@ -7,6 +7,7 @@ def create_madlib():
     path = choose_template()
     template = read_template(path)
     blank_madlib, user_inputs = gather_prompt_inputs(template)
+    madlib = generate_madlib(blank_madlib, user_inputs)
 
 
 def show_header():
@@ -64,6 +65,13 @@ def parse_template(text):
     parts = tuple(re.findall(regex, text))
     stripped = re.sub(regex, '{}', text)
     return stripped, parts
+
+
+def generate_madlib(blank_madlib, user_inputs):
+    show_divider()
+    generated = merge(blank_madlib, user_inputs)
+    print(generated)
+    return generated
 
 
 def merge(madlib, user_inputs):

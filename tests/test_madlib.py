@@ -2,7 +2,7 @@ import pytest
 import os
 from collections import namedtuple
 
-from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, gather_prompt_inputs, merge
+from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, gather_prompt_inputs, merge, generate_madlib
 
 
 def emulate_terminal_size(monkeypatch, columns=20, lines=10):
@@ -99,3 +99,12 @@ def test_read_template_raises_exception_with_bad_path():
     with pytest.raises(FileNotFoundError):
         path = "missing.txt"
         read_template(path)
+
+
+def test_valid_generated_madlib(monkeypatch):
+    emulate_terminal_size(monkeypatch)
+    expected = "It was a dark and stormy night."
+    blank_madlib = "It was a {} and {} {}."
+    mocked_inputs = ["dark", "stormy", "night"]
+    actual = generate_madlib(blank_madlib, mocked_inputs)
+    assert expected == actual
