@@ -1,9 +1,8 @@
 import pytest
 import os
 from collections import namedtuple
-import sys
 
-from madlib_cli.madlib import show_header, show_divider, read_template, parse_template, merge
+from madlib_cli.madlib import show_header, show_divider, show_templates, get_path_from_template_title, choose_template, read_template, parse_template, merge
 
 
 def emulate_terminal_size(monkeypatch, columns=20, lines=10):
@@ -26,9 +25,40 @@ def test_displays_a_valid_header(monkeypatch, capsys):
 
 def test_displays_a_valid_divider(monkeypatch, capsys):
     emulate_terminal_size(monkeypatch)
-    divider = "==="
-    show_header()
-    assert text_in_captured_output(divider, capsys)
+    default_divider = "==="
+    show_divider()
+    assert text_in_captured_output(default_divider, capsys)
+
+
+def test_displays_template_list(capsys):
+    expected = "Dark and Stormy Night"
+    show_templates()
+    assert text_in_captured_output(expected, capsys)
+
+
+def test_returns_path_from_template_title():
+    template_title = "Dark and Stormy Night"
+    expected = "./assets/dark_and_stormy_night_template.txt"
+    actual = get_path_from_template_title(template_title)
+    assert expected == actual
+
+def test_chooses_correct_template_from_selection(monkeypatch, capsys):
+    user_input = "3"
+    monkeypatch.setattr('builtins.input', lambda _: user_input)
+    expected_return = "./assets/dark_and_stormy_night_template.txt"
+    actual_return = choose_template()
+    expected_print = "let's get started creating Dark and Stormy Night..."
+    assert text_in_captured_output(expected_print, capsys) and expected_return == actual_return
+
+
+def test_prints_error_msg_with_invalid_input(monkeypatch, capsys):
+    user_inputs = ["0", "xyz", "1"]
+    def mock_user_input(prompt):
+        return user_inputs.pop(0)
+    monkeypatch.setattr('builtins.input', mock_user_input)
+    choose_template()
+    expected_error_msg = "The selection you provided is not valid, please try again."
+    assert text_in_captured_output(expected_error_msg, capsys)
 
 
 def test_read_template_returns_stripped_string():
