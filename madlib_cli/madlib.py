@@ -90,11 +90,12 @@ def show_divider(character="="):
     print(divider_line)
 
 
-templates = [
+templates = (
     "Adventurous Tale",
     "Crazy Day at the Office",
     "Dark and Stormy Night",
-]
+    "Make Me a Video Game"
+)
 
 strings = {
     "welcome": """Hey there! Welcome to madlibs!\n\nYou will be prompted to select a madlib template.\n\nYou will then be given a series of prompts. Fill in each to create your madlib.\n\nReady to have some fun? Lets get started...""",
